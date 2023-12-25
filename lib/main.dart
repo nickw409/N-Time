@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:n_time/data/event.dart';
+import 'package:n_time/data/schedule.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -29,7 +30,11 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var status = false;
-  var scheduleId = 1;
+  Schedule schedule = Schedule(
+    scheduleId : 1, 
+    username : 'admin', 
+    scheduleName : 'testing'
+  );
 
   void getStatus() async {
     final response = await http.get(
@@ -42,6 +47,7 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
 }
 
 class MyHomePage extends StatefulWidget {
@@ -54,6 +60,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Future<Schedule> schedule;
+  String username = 'admin';
+
+  @override
+  void initState() {
+    super.initState();
+    schedule = fetchSchedule(username);
+  }
 
   @override
   Widget build(BuildContext context) {
