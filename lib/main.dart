@@ -30,11 +30,6 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var status = false;
-  Schedule schedule = Schedule(
-    scheduleId : 1, 
-    username : 'admin', 
-    scheduleName : 'testing'
-  );
 
   void getStatus() async {
     final response = await http.get(
@@ -83,14 +78,24 @@ class _MyHomePageState extends State<MyHomePage> {
           style: style,
         ),
       ),
-      body: const Column(
+      body: Column(
         children: [
-          Center(
+          const Center(
             child: Calendar(),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Center(
-            child: ServerStatus(),
+            child: FutureBuilder<Schedule>(
+              future: schedule, 
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(snapshot.data!.scheduleName);
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return const CircularProgressIndicator();
+              },
+            )
           ),
         ],
       ),

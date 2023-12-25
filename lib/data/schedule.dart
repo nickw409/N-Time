@@ -42,12 +42,15 @@ class Schedule {
 }
 
 Future<Schedule> fetchSchedule(String username) async {
-  String urlDomain = 'http://www.enginick.com:9696';
+  const urlDomain = 'www.enginick.com:9696';
+  final queryParams = {
+    'username': username,
+  };
 
-  final response = await http.get(Uri.parse('$urlDomain/schedules/$username'));
-
+  final response = await http.get(Uri.http(urlDomain, '/schedules', queryParams));
   if (response.statusCode == 200) {
-    return Schedule.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+    var decoded = jsonDecode(response.body);
+    return Schedule.fromJson(decoded[0] as Map<String, dynamic>);
   } else {
     throw Exception('Failed to load schedules');
   }
