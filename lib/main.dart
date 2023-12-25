@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:n_time/data/event.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
@@ -95,6 +96,10 @@ class _CalendarState extends State<Calendar> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
+  List<Event> _getEventsForDay(DateTime day) {
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     
@@ -123,6 +128,9 @@ class _CalendarState extends State<Calendar> {
       },
       onPageChanged: (focusedDay) {
         _focusedDay = focusedDay;
+      },
+      eventLoader: (day) {
+        return _getEventsForDay(day);
       },
     );
   }
