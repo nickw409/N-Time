@@ -81,6 +81,17 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Add Event',
+            style: ButtonStyle(
+              iconColor: MaterialStateProperty.resolveWith<Color?>(
+                (Set<MaterialState> states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return theme.colorScheme.onPrimary.withOpacity(0.5);
+                  } else {
+                    return theme.colorScheme.onPrimary;
+                  }
+                }
+              ),
+            ),
             onPressed: () {
               debugPrint('Add Event');
             },
