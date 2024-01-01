@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:n_time/ui/calendar.dart';
 import 'package:get_it/get_it.dart';
-import 'package:n_time/data/event.dart';
 
 void main() async {
   registerSingletons();
