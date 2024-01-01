@@ -77,6 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
           widget.title,
           style: style,
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: 'Add Event',
+            onPressed: () {
+              debugPrint('Add Event');
+            },
+          ),
+        ],
       ),
       body: const Calendar()
     );
