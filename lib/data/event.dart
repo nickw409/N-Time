@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
 class Event implements Comparable<Event>{
   int id;
   String title;
@@ -33,4 +35,9 @@ class Event implements Comparable<Event>{
   int compareTo(Event other) {
     return dateTime.compareTo(other.dateTime);
   }
+}
+
+List<Event> parseEvents(String body) {
+  final parsed = (jsonDecode(body) as List).cast<Map<String, dynamic>>();
+  return parsed.map<Event>((json) => Event.fromJson(json)).toList();
 }
