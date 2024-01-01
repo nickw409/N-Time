@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './event.dart';
@@ -39,7 +40,28 @@ class Schedule {
     events.remove(event);
     events.sort();
   }
+
+  
 }
+
+Future<List<Event>> fetchEvents(int scheduleId) async {
+  const urlDomain = 'www.enginick.com:9696';
+  final queryParams = {
+    'schedule_id': scheduleId,
+  };
+
+  final response = await http.get(Uri.http(urlDomain, '/events', queryParams));
+  if (response.statusCode == 200) {
+    return compute(parseEvents, response.body);
+  } else {
+    throw Exception('Failed to fetch events');
+  }
+}
+
+List<Event> parseEvents(String body) {
+  final parsed = (jsonDecode(body) as List).cast<Map<String, dynamic>>();
+  return parsed.map<Event>((json) => Event.fromJson(json)).toList();
+} 
 
 Future<Schedule> fetchSchedule(String username) async {
   const urlDomain = 'www.enginick.com:9696';
