@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:n_time/data/event.dart';
+import 'package:n_time/data/app_model.dart';
+import 'package:n_time/logic/schedule_logic.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:http/http.dart' as http;
+import 'package:n_time/ui/calendar.dart';
+import 'package:get_it/get_it.dart';
 
-void main() {
+void main() async {
+  registerSingletons();
+  appModel.schedule = await loadSchedule(appModel.username);
+  debugPrint(appModel.schedule?.scheduleName);
   runApp(const MyApp());
 }
+
+void registerSingletons() {
+  GetIt.I.registerSingleton<AppModel>(AppModel());
+}
+
+AppModel get appModel => GetIt.I.get<AppModel>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -29,7 +40,6 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var status = false;
-  var scheduleId = 1;
 
   void getStatus() async {
     final response = await http.get(
@@ -54,7 +64,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -69,72 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
           style: style,
         ),
       ),
-      body: const Column(
-        children: [
-          Center(
-            child: Calendar(),
-          ),
-          SizedBox(height: 20,),
-          Center(
-            child: ServerStatus(),
-          ),
-        ],
-      ),
+      body: const Calendar()
     );
   }
 }
 
-class Calendar extends StatefulWidget {
-  const Calendar({super.key});
 
-  @override
-  State<Calendar> createState() => _CalendarState();
-}
-
-class _CalendarState extends State<Calendar> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
-
-  List<Event> _getEventsForDay(DateTime day) {
-    return [];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    
-    return TableCalendar(
-      firstDay: DateTime.utc(2020, 1, 1),
-      lastDay: DateTime.utc(2030, 1, 1),
-      focusedDay: _focusedDay,
-      calendarFormat: _calendarFormat,
-      selectedDayPredicate: (day) {
-        return isSameDay(_selectedDay, day);
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        if (!isSameDay(_selectedDay, selectedDay)) {
-          setState(() {
-            _selectedDay = selectedDay;
-            _focusedDay = focusedDay;
-          });
-        }
-      },
-      onFormatChanged: (format) {
-        if (_calendarFormat != format) {
-          setState(() {
-            _calendarFormat = format;
-          });
-        }
-      },
-      onPageChanged: (focusedDay) {
-        _focusedDay = focusedDay;
-      },
-      eventLoader: (day) {
-        return _getEventsForDay(day);
-      },
-    );
-  }
-}
 
 class ServerStatus extends StatelessWidget {
   const ServerStatus({
