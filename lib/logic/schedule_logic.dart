@@ -1,5 +1,5 @@
 import 'package:n_time/data/schedule_data.dart';
-import 'package:n_time/data/event.dart';
+import 'package:n_time/data/event_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,7 +9,6 @@ Future<Schedule> loadSchedule(String username) async {
   try {
     schedule = await fetchSchedule(username);
     final events = await fetchEvents(schedule.scheduleId);
-    debugPrint("Events: $events");
     for (Event event in events) {
       schedule.addEvent(event);
     }

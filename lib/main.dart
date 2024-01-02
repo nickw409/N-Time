@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:n_time/data/app_model.dart';
-import 'package:n_time/logic/schedule_logic.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:n_time/ui/calendar.dart';
 import 'package:get_it/get_it.dart';
+
+import 'package:n_time/ui/calendar_view.dart';
+import 'package:n_time/data/app_model.dart';
+import 'package:n_time/logic/schedule_logic.dart';
+import 'package:n_time/ui/create_event_view.dart';
 
 void main() async {
   registerSingletons();
   appModel.schedule = await loadSchedule(appModel.username);
-  debugPrint(appModel.schedule?.scheduleName);
   runApp(const MyApp());
 }
 
@@ -93,7 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             onPressed: () {
-              debugPrint('Add Event');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const EventForm(),
+                  fullscreenDialog: true
+                ),
+              );
             },
           ),
         ],
