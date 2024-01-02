@@ -50,6 +50,9 @@ class EventFormState extends State<EventForm> {
                 return null;
               },
             ),
+            const SizedBox(
+              height: 8.0,
+            ),
             ElevatedButton(
               onPressed: () {
                 if (_eventFormKey.currentState!.validate()) {
