@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:n_time/data/event.dart';
+import 'package:n_time/data/event_data.dart';
 import 'package:n_time/main.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -89,7 +89,11 @@ class _CalendarState extends State<Calendar> {
                     ),
                     child: ListTile(
                       onTap: () => debugPrint('Tapped: ${value[index].title}'),
-                      title: Text(value[index].title),
+                      title: Text(
+                        '${value[index].title} @ '
+                        '${value[index].dateTime.toLocal().hour.toString().padLeft(2, '0')}'
+                        ':${value[index].dateTime.toLocal().minute.toString().padLeft(2, '0')}'
+                        ),
                     ),
                   );
                 },

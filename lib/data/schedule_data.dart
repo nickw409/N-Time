@@ -1,4 +1,4 @@
-import 'package:n_time/data/event.dart';
+import 'package:n_time/data/event_data.dart';
 
 class Schedule {
   List<Event> events = [];
