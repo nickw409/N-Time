@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:n_time/data/event_data.dart';
+
 class EventForm extends StatefulWidget {
   const EventForm({super.key});
 
@@ -12,6 +14,7 @@ class EventForm extends StatefulWidget {
 
 class EventFormState extends State<EventForm> {
   final _eventFormKey = GlobalKey<FormState>();
+  final formController = TextEditingController();
   
   DateTime? _startDate = DateTime.now();
   DateTime? _endDate = DateTime.now();
@@ -19,6 +22,12 @@ class EventFormState extends State<EventForm> {
 
   TimeOfDay? _startTime = TimeOfDay.now();
   TimeOfDay? _endTime = TimeOfDay.fromDateTime(DateTime.now().add(const Duration(minutes: 5)));
+
+  @override
+  void dispose() {
+    formController.dispose();
+    super.dispose();
+  }
 
   @override 
   Widget build(BuildContext context) {
@@ -39,7 +48,33 @@ class EventFormState extends State<EventForm> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Good Input')),
                 );
-                Navigator.of(context).pop();
+                final DateTime eventStartDate = DateTime(_startDate!.year,
+                                                    _startDate!.month,
+                                                    _startDate!.day,
+                                                    _startTime!.hour,
+                                                    _startTime!.minute,
+                                                    _startDate!.second,
+                                                    _startDate!.millisecond,
+                                                    _startDate!.microsecond,
+                                                    );
+
+                final DateTime eventEndDate = DateTime(_endDate!.year,
+                                                    _endDate!.month,
+                                                    _endDate!.day,
+                                                    _endTime!.hour,
+                                                    _endTime!.minute,
+                                                    _endDate!.second,
+                                                    _endDate!.millisecond,
+                                                    _endDate!.microsecond,
+                                                    );
+                                                  
+                Event newEvent = Event(
+                  id: 0,
+                  title: formController.text,
+                  dateTime: eventStartDate,
+                  duration: eventStartDate.difference(eventEndDate).inMinutes,
+                  );
+                Navigator.pop(context, newEvent);
               }
             },
             child: Text(
@@ -58,6 +93,7 @@ class EventFormState extends State<EventForm> {
             Padding(
               padding: const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
               child: TextFormField(
+                controller: formController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Title',

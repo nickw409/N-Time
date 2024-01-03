@@ -94,12 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const EventForm(),
-                  fullscreenDialog: true
-                ),
-              );
+              _navigateEventForm(context);
             },
           ),
         ],
@@ -109,7 +104,24 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+Future<void> _navigateEventForm(BuildContext context) async {
+  final result = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (BuildContext context) => const EventForm(),
+      fullscreenDialog: true
+    ),
+  );
 
+  // Need to check if not mounted after async gap
+  if (!context.mounted) {
+    return;
+  }
+
+  if (result != null) {
+    appModel.schedule?.addEvent(result);
+  }
+}
 
 class ServerStatus extends StatelessWidget {
   const ServerStatus({

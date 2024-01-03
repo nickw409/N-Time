@@ -34,6 +34,11 @@ class Event implements Comparable<Event>{
   int compareTo(Event other) {
     return dateTime.compareTo(other.dateTime);
   }
+
+  @override
+  String toString() {
+    return 'id: $id, title: $title, dateAndTime: ${dateTime.toString()}, duration: $duration';
+  }
 }
 
 List<Event> parseEvents(String body) {
